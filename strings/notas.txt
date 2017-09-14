@@ -1,0 +1,20 @@
+Requisitos não definidos:
+- Qtde máxima de tweets -> Definido em 99 
+- Chamada do programa sem parâmetro -> Avisar
+- Chamada do programa com 2 ou mais parâmetros -> Desprezar
+
+Condições (por ordem de prioridade):
+- Citações completas (par de aspas duplas)
+- Frases completas (ponto final e espaço)
+- Palavras completas (espaço)
+- Qtde. limite de caracter
+
+To do:
+- Tratar situações onde a citação é maior que 70 caracteres
+- Deixar dinâmico o espaço reservado ao índice (atualmente fixo em 5 caracteres: 99/99)
+- Tratamento de exceções
+- Maior amostra de testes
+- Otimizar loop do método strToTweet em text.Split
+- Analisar modificadores de acesso
+
+
