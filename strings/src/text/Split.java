@@ -26,12 +26,9 @@ public class Split {
                 phrase = text;
             } else {
                 pos = clause.getCitationPos(text);
-                if (pos==-1)                
-                    pos = clause.getPhrasePos(text);
-                if (pos==-1)
-                    pos = clause.getWordPos(text);
-                if (pos==-1)
-                    pos = clause.getFinalPos(text);
+                if (pos==-1) pos = clause.getPhrasePos(text);
+                if (pos==-1) pos = clause.getWordPos(text);
+                if (pos==-1) pos = clause.getFinalPos(text);
                 phrase = text.substring(0,pos);
                 text = text.substring(pos);
             }

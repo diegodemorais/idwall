@@ -10,11 +10,11 @@ package text;
  * @author DM
  */
 public class Clause {
-    private final int MAX_INDEX = 0; //Used to make an index
-    private final int LIMIT = 40 - MAX_INDEX; //The length of a phrase
+    //private final int MAX_INDEX = 0; //Used to make an index
+    private final int LIMIT = 40;// - MAX_INDEX; //The length of a phrase
   
       public int getCitationPos(String text){ //Complete text
-        int pos = text.lastIndexOf("\"",LIMIT);
+        int pos = text.lastIndexOf("\"");
         if (pos >=0){
             int pos2 = text.lastIndexOf("\"",pos); //Need to find 2 quotes: the complete citation
             if (pos2 == -1)
@@ -25,7 +25,7 @@ public class Clause {
     }  
     
     public int getPhrasePos(String text){ //Complete Phrase
-        int pos = text.lastIndexOf(". ",LIMIT);
+        int pos = text.lastIndexOf(". ");
         if (pos <= LIMIT) //The clause must be long enough.
             return -1;
         return (pos+1);
@@ -46,7 +46,7 @@ public class Clause {
     }
 
     public int getWordPos(String text){ //String final
-        int pos = text.lastIndexOf(" ",LIMIT);
+        int pos = text.lastIndexOf(" ");
         if (pos <= LIMIT) //The clause must be long enough.
             return -1;
         return (pos+1);

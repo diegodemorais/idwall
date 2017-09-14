@@ -17,11 +17,13 @@ public class Generator {
         
         try {
             if (args.length > 0) 
-                Print.print(args[0]); //Considering he text corpus passed as the first parameter;
+                Print.print(args[0]); //Considering the text passed as the first parameter;
             else
                 System.out.println(noArg);                
+            } catch (NullPointerException ne) {
+                System.out.println(noArg);                
             } catch (Exception e) {
-                System.out.println(noArg);
+                System.out.println(e);
             }
     }
 }
