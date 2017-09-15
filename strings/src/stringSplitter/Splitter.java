@@ -5,6 +5,9 @@
  */
 package stringSplitter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  *
@@ -59,6 +62,7 @@ public class Splitter {
         return result;
     }
     
+    //Setting priorities
     public static  int getLineBreaker(String text){
         if (getNewLine(text) != -1)  return getNewLine(text);
         if (getFinal(text) < LIMIT)  return getFinal(text);
@@ -66,23 +70,97 @@ public class Splitter {
         return getDotCommaSpace(text);
     }
     
-    public static StringBuilder splitting(String text){
-        StringBuilder result = new StringBuilder();
+    //Splitting - the main logic
+    public static String splitting(String text, boolean justified){
+        List<String> result = new ArrayList<>();
         int pos;
+        String part;
         
         while (getFinal(text) != 0) {
             pos = getLineBreaker(text.substring(0,getFinal(text)));
-            result.append(text.substring(getStart(text),pos)).append("\n");
+            part = text.substring(getStart(text),pos);
+            if (justified) part = justify(part);
+            result.add(part+"\n");
             text = text.substring((pos==0 ? 1 : pos)+getStart(text));
         }
-
-        return result;
+        
+        String resultStr = "";
+        for(String str : result)
+            resultStr+= str;
+        
+        return resultStr;
     }
+    
+    //Adding spaces to justify 
+    public static String justify(String text){
+        int size = text.length();
+        if (size==LIMIT) return text;
+        
+        int miss = LIMIT - size;
+        List<Integer> spaces = new ArrayList<>();
+        char[] textChar = text.toCharArray();
+        for(int i=0;i<size;i++)
+            if (textChar[i] == ' ')
+                spaces.add(i);
+        
+        if (spaces.isEmpty()) return text;
+        
+        StringBuilder result = new StringBuilder(text);
+        while (miss>0) {
+            if (miss>0) {
+                result.insert((int) spaces.get(0),' ');
+                for(int j=0;j<spaces.size();j++)
+                    spaces.set(j, spaces.get(j)+1);
+                miss--;
+            }
+            if (miss>0) {
+                result.insert((int) spaces.get(spaces.size()-1),' ');
+                spaces.set(spaces.size()-1, spaces.get(spaces.size()-1)+1);
+                miss--;
+            }        
+            for(int i=2;i<spaces.size()-1&&miss>0;i+=2){
+                result.insert((int) spaces.get(i),' ');
+                for(int j=i;j<spaces.size();j++)
+                    spaces.set(j, spaces.get(j)+1);
+                miss--;
+            }
+            for(int i=1;i<spaces.size()-1&&miss>0;i+=2){
+                result.insert((int) spaces.get(i),' ');
+                for(int j=i;j<spaces.size();j++)
+                    spaces.set(j, spaces.get(j)+1);
+                miss--;
+            }
+        }
+//        for (int i=0;(miss>0)&&(i<spaces.size());i++){
+//            result.insert(spaces.get(i)+count, ' ');
+//            miss--;
+//            count++;
+//            
+//            if ((i==spaces.size())&&(miss>0))
+//                i= -1;
+//        }
+        
+        text = result.toString();
+        return text;
+    }
+    
+//    public static ArrayList splitting(String text){
+//        StringBuilder result = new StringBuilder();
+//        int pos;
+//        
+//        while (getFinal(text) != 0) {
+//            pos = getLineBreaker(text.substring(0,getFinal(text)));
+//            result.append(text.substring(getStart(text),pos)).append("\n");
+//            text = text.substring((pos==0 ? 1 : pos)+getStart(text));
+//        }
+//
+//        return result;
+//    }
 
     public static void main(String[] args){
         String in = "In the beginning God created the heavens and the earth. Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.\nAnd God said, \"Let there be light,\" and there was light. God saw that the light was good, and he separated the light from the darkness. God called the light \"day,\" and the darkness he called \"night.\" And there was evening, and there was morning - the first day.";
      
-        System.out.println(splitting(in));
+        System.out.println(splitting(in,true));
         
     }
 }
