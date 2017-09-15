@@ -14,7 +14,8 @@ import java.util.List;
  * @author DM
  */
 public class Splitter {
-    static final int LIMIT=40;
+    //static final int limit=40;
+    static int limit;
     
     //Removing the white space from beggining
     public static int getStart(String text){
@@ -26,11 +27,11 @@ public class Splitter {
     
     //Getting the right length to the sentence
     public static int getFinal(String text){
-        if (text.length()>= LIMIT+1)
-            if (text.substring(LIMIT,LIMIT+1).equals(" ")) return LIMIT+1;
-                if (text.length()>= LIMIT+2)
-            if (text.substring(LIMIT,LIMIT+2).equals("\n")) return LIMIT+2;
-        if (text.length() >= LIMIT) return LIMIT;
+        if (text.length()>= limit+1)
+            if (text.substring(limit,limit+1).equals(" ")) return limit+1;
+                if (text.length()>= limit+2)
+            if (text.substring(limit,limit+2).equals("\n")) return limit+2;
+        if (text.length() >= limit) return limit;
         return text.length();
     }
     
@@ -65,13 +66,15 @@ public class Splitter {
     //Setting priorities
     public static  int getLineBreaker(String text){
         if (getNewLine(text) != -1)  return getNewLine(text);
-        if (getFinal(text) < LIMIT)  return getFinal(text);
+        if (getFinal(text) < limit)  return getFinal(text);
         if (getQuote(text) != -1)  return getQuote(text);
         return getDotCommaSpace(text);
     }
     
     //Splitting - the main logic
-    public static String splitting(String text, boolean justified){
+    public static String splitting(String text, int limit, boolean justified){
+        Splitter.limit = limit;
+        
         List<String> result = new ArrayList<>();
         int pos;
         String part;
@@ -92,11 +95,12 @@ public class Splitter {
     }
     
     //Adding spaces to justify 
+    //This logic is specific to fit with de output sample
     public static String justify(String text){
         int size = text.length();
-        if (size==LIMIT) return text;
+        if (size==limit) return text;
         
-        int miss = LIMIT - size;
+        int miss = limit - size;
         List<Integer> spaces = new ArrayList<>();
         char[] textChar = text.toCharArray();
         for(int i=0;i<size;i++)
@@ -104,18 +108,20 @@ public class Splitter {
                 spaces.add(i);
         
         if (spaces.isEmpty()) return text;
-        
+
         StringBuilder result = new StringBuilder(text);
+        int count=0;
         while (miss>0) {
+            count++;
             if (miss>0) {
                 result.insert((int) spaces.get(0),' ');
                 for(int j=0;j<spaces.size();j++)
                     spaces.set(j, spaces.get(j)+1);
                 miss--;
             }
-            if (miss>0) {
+            if ((miss>0)&&(count%2!=0)) {
                 result.insert((int) spaces.get(spaces.size()-1),' ');
-                spaces.set(spaces.size()-1, spaces.get(spaces.size()-1)+1);
+                spaces.set(spaces.size()-1, spaces.get(spaces.size()-1)+1);                    
                 miss--;
             }        
             for(int i=2;i<spaces.size()-1&&miss>0;i+=2){
@@ -131,6 +137,7 @@ public class Splitter {
                 miss--;
             }
         }
+//        //Simple logic
 //        for (int i=0;(miss>0)&&(i<spaces.size());i++){
 //            result.insert(spaces.get(i)+count, ' ');
 //            miss--;
@@ -143,24 +150,10 @@ public class Splitter {
         text = result.toString();
         return text;
     }
-    
-//    public static ArrayList splitting(String text){
-//        StringBuilder result = new StringBuilder();
-//        int pos;
-//        
-//        while (getFinal(text) != 0) {
-//            pos = getLineBreaker(text.substring(0,getFinal(text)));
-//            result.append(text.substring(getStart(text),pos)).append("\n");
-//            text = text.substring((pos==0 ? 1 : pos)+getStart(text));
-//        }
-//
-//        return result;
-//    }
 
     public static void main(String[] args){
         String in = "In the beginning God created the heavens and the earth. Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.\nAnd God said, \"Let there be light,\" and there was light. God saw that the light was good, and he separated the light from the darkness. God called the light \"day,\" and the darkness he called \"night.\" And there was evening, and there was morning - the first day.";
      
-        System.out.println(splitting(in,true));
-        
+        System.out.println(splitting(in,40,true));
     }
 }
